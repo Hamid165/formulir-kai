@@ -61,7 +61,7 @@
 <!-- Toolbar -->
 <div class="flex justify-end items-center mb-4 px-2">
     <div class="flex items-center gap-2">
-        <a href="{{ route('form-revocation.create') }}" class="inline-flex items-center justify-center px-4 h-[40px] bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors w-auto">
+        <a href="{{ route('form-pencabutan-hak-akses.create') }}" class="inline-flex items-center justify-center px-4 h-[40px] bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors w-auto">
             Tambah Formulir
         </a>
     </div>
@@ -92,13 +92,13 @@
             <div class="col-span-2 flex justify-end items-center">
                 <!-- Actions -->
                 <div class="flex items-center gap-2">
-                    <a href="{{ route('form-revocation.edit', $form->id) }}" class="text-amber-500 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 h-[40px] w-[40px] flex items-center justify-center rounded-lg transition-colors" title="Edit">
+                    <a href="{{ route('form-pencabutan-hak-akses.edit', $form->id) }}" class="text-amber-500 hover:text-amber-700 bg-amber-50 hover:bg-amber-100 h-[40px] w-[40px] flex items-center justify-center rounded-lg transition-colors" title="Edit">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     </a>
-                    <a href="{{ route('form-revocation.show', $form->id) }}" class="text-emerald-600 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 h-[40px] w-[40px] flex items-center justify-center rounded-lg transition-colors" title="Cetak / Lihat PDF">
+                    <a href="{{ route('form-pencabutan-hak-akses.show', $form->id) }}" class="text-emerald-600 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 h-[40px] w-[40px] flex items-center justify-center rounded-lg transition-colors" title="Cetak / Lihat PDF">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                     </a>
-                    <form action="{{ route('form-revocation.destroy', $form->id) }}" method="POST" class="inline-block m-0">
+                    <form action="{{ route('form-pencabutan-hak-akses.destroy', $form->id) }}" method="POST" class="inline-block m-0">
                         @csrf
                         @method('DELETE')
                         <button type="button" onclick="confirmDelete(this.form)" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 h-[40px] w-[40px] flex items-center justify-center rounded-lg transition-colors" title="Hapus">
@@ -119,7 +119,7 @@
         <p class="text-gray-900 font-semibold mb-1">Belum ada data formulir pencabutan hak akses</p>
         <p class="text-sm text-gray-500 mb-6">Silakan buat formulir baru untuk memulai pencatatan.</p>
         <div class="flex items-center justify-center gap-2">
-            <a href="{{ route('form-revocation.create') }}" class="inline-flex items-center justify-center px-4 h-[40px] bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors w-auto">
+            <a href="{{ route('form-pencabutan-hak-akses.create') }}" class="inline-flex items-center justify-center px-4 h-[40px] bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors w-auto">
                 Tambah Formulir
             </a>
         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Permohonan Pencabutan Hak Akses')
+@section('title', 'Tambah Permohonan Pencabutan Hak Akses')
 
 @section('content')
 @include('components.custom-datepicker')
@@ -288,11 +288,9 @@
 
 <div class="v2-page">
 <div class="max-w-6xl mx-auto px-4">
-
     <div class="v2-main-container">
-    <form id="revocationForm" action="{{ route('form-revocation.update', $form->id) }}" method="POST">
+    <form id="revocationForm" action="{{ route('form-pencabutan-hak-akses.store') }}" method="POST">
         @csrf
-        @method('PUT')
 
         {{-- ─── SECTION 1 ─── --}}
         <div class="v2-card">
@@ -309,7 +307,7 @@
                         <label class="v2-label">No Ref <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
-                            <input type="text" name="no_ref" value="{{ old('no_ref', $form->no_ref) }}" class="v2-input" placeholder="01 / 10 / 2020" required>
+                            <input type="text" name="no_ref" value="{{ old('no_ref') }}" class="v2-input" placeholder="01 / 10 / 2020" required>
                         </div>
                     </div>
 
@@ -317,7 +315,7 @@
                         <label class="v2-label">Tanggal Cetak <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <input type="text" name="tanggal" value="{{ old('tanggal', $form->tanggal) }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
+                            <input type="text" name="tanggal" value="{{ old('tanggal') }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
                         </div>
                     </div>
 
@@ -325,7 +323,7 @@
                         <label class="v2-label">Business Area <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                            <input type="text" name="business_area" value="{{ old('business_area', $form->business_area) }}" class="v2-input" placeholder="Nama Business Area" required>
+                            <input type="text" name="business_area" value="{{ old('business_area') }}" class="v2-input" placeholder="Nama Business Area" required>
                         </div>
                     </div>
                 </div>
@@ -347,7 +345,7 @@
                         <label class="v2-label">Tanggal Permohonan <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <input type="text" name="tanggal_permohonan" value="{{ old('tanggal_permohonan', $form->tanggal_permohonan) }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
+                            <input type="text" name="tanggal_permohonan" value="{{ old('tanggal_permohonan') }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
                         </div>
                     </div>
 
@@ -355,7 +353,7 @@
                         <label class="v2-label">Nama Pemohon <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            <input type="text" name="nama_pemohon" value="{{ old('nama_pemohon', $form->nama_pemohon) }}" class="v2-input" placeholder="Nama Lengkap" required>
+                            <input type="text" name="nama_pemohon" value="{{ old('nama_pemohon') }}" class="v2-input" placeholder="Nama Lengkap" required>
                         </div>
                     </div>
 
@@ -363,7 +361,7 @@
                         <label class="v2-label">NIP Pemohon <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            <input type="text" name="nip_pemohon" value="{{ old('nip_pemohon', $form->nip_pemohon) }}" class="v2-input" placeholder="NIP / NIPP Pemohon" required>
+                            <input type="text" name="nip_pemohon" value="{{ old('nip_pemohon') }}" class="v2-input" placeholder="NIP / NIPP Pemohon" required>
                         </div>
                     </div>
 
@@ -371,7 +369,7 @@
                         <label class="v2-label">Bagian / Fungsi <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                            <input type="text" name="bagian_fungsi" value="{{ old('bagian_fungsi', $form->bagian_fungsi) }}" class="v2-input" placeholder="Contoh: Unit IT / Keuangan" required>
+                            <input type="text" name="bagian_fungsi" value="{{ old('bagian_fungsi') }}" class="v2-input" placeholder="Contoh: Unit IT / Keuangan" required>
                         </div>
                     </div>
                 </div>
@@ -406,31 +404,14 @@
                             </tr>
                         </thead>
                         <tbody id="checklist-body">
-                            @php
-                                $maxIndex = count($items) > 0 ? max(array_keys($items)) : 0;
-                            @endphp
-                            @for ($i = 0; $i <= $maxIndex; $i++)
-                                @if (isset($items[$i]))
-                                    @php
-                                        $item = $items[$i];
-                                        $no = $i + 1;
-                                    @endphp
-                                    <tr>
-                                        <td><span class="v2-row-no">{{ $no }}</span><input type="hidden" name="items[{{ $no }}][no]" value="{{ $no }}"></td>
-                                        <td><input type="text" name="items[{{ $no }}][nama_pengguna]" class="v2-td-input" value="{{ $item->nama_pengguna }}" placeholder="Nama & NIP Personil" required></td>
-                                        <td><input type="text" name="items[{{ $no }}][jenis_akun]" class="v2-td-input" value="{{ $item->jenis_akun }}" placeholder="Jenis Akun / Akses" required></td>
-                                        <td><input type="text" name="items[{{ $no }}][unit_kerja]" class="v2-td-input" value="{{ $item->unit_kerja }}" placeholder="Unit Kerja Personil" required></td>
-                                        <td><textarea name="items[{{ $no }}][alasan]" class="v2-td-textarea" rows="1" oninput="autoResize(this)" onkeyup="autoResize(this)" placeholder="Alasan Pencabutan" required>{{ $item->alasan }}</textarea></td>
-                                        <td>
-                                            @if ($no > 1)
-                                                <button type="button" class="v2-btn-delete btn-delete-row" title="Hapus">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                                </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endfor
+                            <tr>
+                                <td><span class="v2-row-no">1</span><input type="hidden" name="items[1][no]" value="1"></td>
+                                <td><input type="text" name="items[1][nama_pengguna]" class="v2-td-input" placeholder="Nama & NIP Personil" required></td>
+                                <td><input type="text" name="items[1][jenis_akun]" class="v2-td-input" placeholder="Jenis Akun / Akses" required></td>
+                                <td><input type="text" name="items[1][unit_kerja]" class="v2-td-input" placeholder="Unit Kerja Personil" required></td>
+                                <td><textarea name="items[1][alasan]" class="v2-td-textarea" rows="1" oninput="autoResize(this)" onkeyup="autoResize(this)" placeholder="Alasan Pencabutan" required></textarea></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -452,7 +433,7 @@
                         <label class="v2-label v2-label-aligned">Tanda Tangan Pemohon (Tanggal & Tahun) <span class="req">*</span> <span style="color:#94a3b8; font-weight:400; text-transform:none; font-size:11px;">(Bandung, otomatis)</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <input type="text" name="kota_tanggal_pemohon" value="{{ old('kota_tanggal_pemohon', $form->kota_tanggal_pemohon) }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
+                            <input type="text" name="kota_tanggal_pemohon" value="{{ old('kota_tanggal_pemohon') }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
                         </div>
                     </div>
 
@@ -461,8 +442,8 @@
                         <div class="v2-input-wrap" style="position:relative;">
                             <svg class="v2-icon" style="z-index:10;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <select id="status_persetujuan" name="status_persetujuan" required>
-                                <option value="DISETUJUI" {{ old('status_persetujuan', $form->status_persetujuan) == 'DISETUJUI' ? 'selected' : '' }}>DISETUJUI</option>
-                                <option value="TIDAK DISETUJUI" {{ old('status_persetujuan', $form->status_persetujuan) == 'TIDAK DISETUJUI' ? 'selected' : '' }}>TIDAK DISETUJUI</option>
+                                <option value="DISETUJUI" selected>DISETUJUI</option>
+                                <option value="TIDAK DISETUJUI">TIDAK DISETUJUI</option>
                             </select>
                         </div>
                     </div>
@@ -473,7 +454,7 @@
                         <label class="v2-label v2-label-aligned">Tanda Tangan Manajemen (Tanggal) <span class="req">*</span> <span style="color:#94a3b8; font-weight:400; text-transform:none; font-size:11px;">(Bandung, otomatis)</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            <input type="text" name="kota_tanggal_setuju" value="{{ old('kota_tanggal_setuju', $form->kota_tanggal_setuju) }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
+                            <input type="text" name="kota_tanggal_setuju" value="{{ old('kota_tanggal_setuju') }}" class="v2-input custom-date-picker" style="cursor:pointer;" placeholder="Pilih Tanggal" autocomplete="off" required>
                         </div>
                     </div>
 
@@ -483,8 +464,8 @@
                             <svg class="v2-icon" style="z-index:10;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             <select id="jabatan_mengetahui" name="jabatan_mengetahui" required>
                                 <option value="">-- Pilih Jabatan --</option>
-                                <option value="Manajemen Puncak" {{ old('jabatan_mengetahui', $form->jabatan_mengetahui) == 'Manajemen Puncak' ? 'selected' : '' }}>Manajemen Puncak</option>
-                                <option value="Pimpinan Unit Sistem Informasi" {{ old('jabatan_mengetahui', $form->jabatan_mengetahui) == 'Pimpinan Unit Sistem Informasi' ? 'selected' : '' }}>Pimpinan Unit Sistem Informasi</option>
+                                <option value="Manajemen Puncak">Manajemen Puncak</option>
+                                <option value="Pimpinan Unit Sistem Informasi">Pimpinan Unit Sistem Informasi</option>
                             </select>
                         </div>
                     </div>
@@ -493,7 +474,7 @@
                         <label class="v2-label v2-label-aligned">Nama Pejabat (Mengetahui) <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            <input type="text" name="mengetahui_nama" value="{{ old('mengetahui_nama', $form->mengetahui_nama) }}" class="v2-input" placeholder="Nama Pejabat Penandatangan" required>
+                            <input type="text" name="mengetahui_nama" value="{{ old('mengetahui_nama') }}" class="v2-input" placeholder="Nama Pejabat Penandatangan" required>
                         </div>
                     </div>
                 </div>
@@ -502,7 +483,7 @@
 
         {{-- ─── Action Buttons ─── --}}
         <div style="display:flex; justify-content:flex-end; gap:14px; margin-top:24px; padding-bottom: 32px;">
-            <a href="{{ route('form-revocation.index') }}" class="v2-btn-cancel">
+            <a href="{{ route('form-pencabutan-hak-akses.index') }}" class="v2-btn-cancel">
                 Batal
             </a>
             <button type="submit" class="v2-btn-save">
@@ -519,7 +500,7 @@
 
 @section('scripts')
 <script>
-    let currentRowCount = {{ $maxIndex + 1 }};
+    let currentRowCount = 1;
 
     function makeRowHTML(n) {
         return `
@@ -582,22 +563,17 @@
             }, true);
         }
 
-        // Initialize autogrowing textareas on load
-        document.querySelectorAll('.v2-td-textarea').forEach(el => {
-            autoResize(el);
-        });
-
-        const Math_jabatanSelect = document.getElementById('jabatan_mengetahui');
-        const Math_namaInput = document.querySelector('input[name="mengetahui_nama"]');
-        if (Math_jabatanSelect && Math_namaInput) {
-            Math_jabatanSelect.addEventListener('change', function() {
+        const jabatanSelect = document.getElementById('jabatan_mengetahui');
+        const namaInput = document.querySelector('input[name="mengetahui_nama"]');
+        if (jabatanSelect && namaInput) {
+            jabatanSelect.addEventListener('change', function() {
                 const val = this.value;
                 if (val === 'Manajemen Puncak') {
-                    Math_namaInput.value = 'Pitra';
+                    namaInput.value = 'Pitra';
                 } else if (val === 'Pimpinan Unit Sistem Informasi') {
-                    Math_namaInput.value = 'Qonita';
+                    namaInput.value = 'Qonita';
                 } else {
-                    Math_namaInput.value = '';
+                    namaInput.value = '';
                 }
             });
         }

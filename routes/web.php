@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\FormCctvController;
-use App\Http\Controllers\FormRevocationController;
+use App\Http\Controllers\FormPencabutanHakAksesController;
 
 Route::get('/', function () {
     $totalKategori = 1; // Dummy untuk saat ini
@@ -11,7 +11,7 @@ Route::get('/', function () {
     
     $totalFormulirBulanIni = \App\Models\FormCctv::whereMonth('created_at', date('m'))
                                 ->whereYear('created_at', date('Y'))
-                                ->count() + \App\Models\FormRevocation::whereMonth('created_at', date('m'))
+                                ->count() + \App\Models\FormPencabutanHakAkses::whereMonth('created_at', date('m'))
                                 ->whereYear('created_at', date('Y'))
                                 ->count();
                                 
@@ -24,9 +24,9 @@ Route::get('/', function () {
             $item->title = "Formulir CCTV - {$item->id_cctv}";
             return $item;
         }))
-        ->concat(\App\Models\FormRevocation::latest()->take(5)->get()->map(function($item) {
+        ->concat(\App\Models\FormPencabutanHakAkses::latest()->take(5)->get()->map(function($item) {
             $item->type = 'Pencabutan Hak Akses';
-            $item->route = route('form-revocation.show', $item->id);
+            $item->route = route('form-pencabutan-hak-akses.show', $item->id);
             $item->title = "Pencabutan Hak Akses - {$item->nama_pemohon}";
             return $item;
         }))
@@ -43,4 +43,4 @@ Route::get('/formulir', function () {
 Route::get('form-cctv/create-v2', [FormCctvController::class, 'createV2'])->name('form-cctv.create-v2');
 Route::resource('form-cctv', FormCctvController::class);
 
-Route::resource('form-revocation', FormRevocationController::class);
+Route::resource('form-pencabutan-hak-akses', FormPencabutanHakAksesController::class);

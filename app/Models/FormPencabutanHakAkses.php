@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FormRevocation extends Model
+class FormPencabutanHakAkses extends Model
 {
+    protected $table = 'form_revocations';
+
     protected $fillable = [
         'no_ref',
         'tanggal',
@@ -23,6 +25,6 @@ class FormRevocation extends Model
 
     public function items()
     {
-        return $this->hasMany(FormRevocationItem::class);
+        return $this->hasMany(FormPencabutanHakAksesItem::class, 'form_revocation_id');
     }
 }

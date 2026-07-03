@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\FormRevocation;
-use App\Models\FormRevocationItem;
+use App\Models\FormPencabutanHakAkses;
+use App\Models\FormPencabutanHakAksesItem;
 
-class FormRevocationController extends Controller
+class FormPencabutanHakAksesController extends Controller
 {
     public function index()
     {
-        $forms = FormRevocation::orderBy('created_at', 'desc')->get();
-        return view('form-revocation.index', compact('forms'));
+        $forms = FormPencabutanHakAkses::orderBy('created_at', 'desc')->get();
+        return view('form-pencabutan-hak-akses.index', compact('forms'));
     }
 
     public function create()
     {
-        return view('form-revocation.create-v2');
+        return view('form-pencabutan-hak-akses.create-v2');
     }
 
     public function store(Request $request)
@@ -41,7 +41,7 @@ class FormRevocationController extends Controller
             'items.*.alasan' => 'nullable|string',
         ]);
 
-        $form = FormRevocation::create([
+        $form = FormPencabutanHakAkses::create([
             'no_ref' => $validatedData['no_ref'] ?? null,
             'tanggal' => $validatedData['tanggal'] ?? null,
             'business_area' => $validatedData['business_area'] ?? null,
@@ -59,7 +59,7 @@ class FormRevocationController extends Controller
         if (isset($validatedData['items']) && is_array($validatedData['items'])) {
             foreach ($validatedData['items'] as $index => $itemData) {
                 $no = $index;
-                FormRevocationItem::create([
+                FormPencabutanHakAksesItem::create([
                     'form_revocation_id' => $form->id,
                     'no' => $no,
                     'nama_pengguna' => $itemData['nama_pengguna'] ?? null,
@@ -70,30 +70,30 @@ class FormRevocationController extends Controller
             }
         }
 
-        return redirect()->route('form-revocation.index')->with('success', "Formulir Pencabutan Hak Akses Berhasil Ditambahkan.");
+        return redirect()->route('form-pencabutan-hak-akses.index')->with('success', "Formulir Pencabutan Hak Akses Berhasil Ditambahkan.");
     }
 
     public function show(string $id)
     {
-        $form = FormRevocation::with('items')->findOrFail($id);
-        return view('form-revocation.show', compact('form'));
+        $form = FormPencabutanHakAkses::with('items')->findOrFail($id);
+        return view('form-pencabutan-hak-akses.show', compact('form'));
     }
 
     public function edit(string $id)
     {
-        $form = FormRevocation::with('items')->findOrFail($id);
+        $form = FormPencabutanHakAkses::with('items')->findOrFail($id);
         
         $items = [];
         foreach ($form->items as $item) {
             $items[$item->no - 1] = $item;
         }
         
-        return view('form-revocation.edit', compact('form', 'items'));
+        return view('form-pencabutan-hak-akses.edit', compact('form', 'items'));
     }
 
     public function update(Request $request, string $id)
     {
-        $form = FormRevocation::findOrFail($id);
+        $form = FormPencabutanHakAkses::findOrFail($id);
         
         $validatedData = $request->validate([
             'no_ref' => 'nullable|string|max:255',
@@ -135,7 +135,7 @@ class FormRevocationController extends Controller
         if (isset($validatedData['items']) && is_array($validatedData['items'])) {
             foreach ($validatedData['items'] as $index => $itemData) {
                 $no = $index;
-                FormRevocationItem::create([
+                FormPencabutanHakAksesItem::create([
                     'form_revocation_id' => $form->id,
                     'no' => $no,
                     'nama_pengguna' => $itemData['nama_pengguna'] ?? null,
@@ -146,14 +146,14 @@ class FormRevocationController extends Controller
             }
         }
 
-        return redirect()->route('form-revocation.index')->with('success', "Formulir Pencabutan Hak Akses Berhasil Diperbarui.");
+        return redirect()->route('form-pencabutan-hak-akses.index')->with('success', "Formulir Pencabutan Hak Akses Berhasil Diperbarui.");
     }
 
     public function destroy(string $id)
     {
-        $form = FormRevocation::findOrFail($id);
+        $form = FormPencabutanHakAkses::findOrFail($id);
         $form->delete();
         
-        return redirect()->route('form-revocation.index')->with('success', "Formulir Pencabutan Hak Akses Berhasil Dihapus.");
+        return redirect()->route('form-pencabutan-hak-akses.index')->with('success', "Formulir Pencabutan Hak Akses Berhasil Dihapus.");
     }
 }
