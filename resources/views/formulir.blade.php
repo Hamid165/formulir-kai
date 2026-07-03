@@ -22,71 +22,52 @@
 
     <!-- Tabs -->
     <div class="bg-gray-100 rounded-lg p-1.5 mb-8 flex space-x-1 w-full border border-gray-200 overflow-x-auto">
-        <button @click="activeTab = 'All'" :class="activeTab === 'All' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap">All</button>
-        <button @click="activeTab = 'Umum'" :class="activeTab === 'Umum' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap">Umum</button>
-        <button @click="activeTab = 'Public'" :class="activeTab === 'Public' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap">Public</button>
-        <button @click="activeTab = 'Terbatas'" :class="activeTab === 'Terbatas' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900'" class="flex-1 py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap">Terbatas</button>
+        <a href="{{ route('formulir.index', ['kategori' => 'All']) }}" class="flex-1 text-center py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap {{ $activeTab === 'All' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">All</a>
+        <a href="{{ route('formulir.index', ['kategori' => 'Umum']) }}" class="flex-1 text-center py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap {{ $activeTab === 'Umum' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">Umum</a>
+        <a href="{{ route('formulir.index', ['kategori' => 'Public']) }}" class="flex-1 text-center py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap {{ $activeTab === 'Public' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">Public</a>
+        <a href="{{ route('formulir.index', ['kategori' => 'Terbatas']) }}" class="flex-1 text-center py-2 px-4 rounded-md text-sm font-semibold transition-colors whitespace-nowrap {{ $activeTab === 'Terbatas' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-900' }}">Terbatas</a>
     </div>
 
     <!-- List of Forms -->
     <div class="space-y-2 relative min-h-[200px]">
         
-        <!-- CONTOH 1: Form Kategori Umum (CCTV) -->
-        <div x-show="activeTab === 'All' || activeTab === 'Umum'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="block">
-            <a href="{{ route('form-cctv.index') }}" class="block">
+        @forelse ($formulirs as $form)
+        <div class="block {{ !$loop->first ? 'mt-2' : '' }}">
+            <a href="{{ $form['route'] }}" class="block">
                 <div class="bg-white hover:bg-blue-50 rounded-xl shadow-sm border border-gray-200 hover:border-blue-200 p-4 flex items-center gap-4 hover:shadow-md transition-all group cursor-pointer">
                     <div class="flex-1 grid grid-cols-12 gap-4 items-center">
                         <div class="col-span-4">
                             <p class="text-xs text-gray-500 font-medium mb-0.5">Formulir</p>
-                            <p class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Formulir CCTV</p>
+                            <p class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $form['nama'] }}</p>
                         </div>
                         <div class="col-span-4 text-center">
                             <p class="text-xs text-gray-500 font-medium mb-0.5">Kategori</p>
-                            <p class="text-sm font-medium text-gray-900">Umum</p>
+                            <p class="text-sm font-medium text-gray-900">{{ $form['kategori'] }}</p>
                         </div>
                         <div class="col-span-4 flex justify-end items-center gap-4">
                             <div class="text-right">
                                 <p class="text-xs text-gray-500 font-medium mb-0.5">Total Data</p>
-                                <p class="text-sm font-semibold text-gray-900">{{ \App\Models\FormCctv::count() }} Formulir</p>
+                                <p class="text-sm font-semibold text-gray-900">{{ $form['total'] }} Formulir</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
-
-        <!-- CONTOH 2: Form Kategori Public (Pencabutan Hak Akses) -->
-        <div x-show="activeTab === 'All' || activeTab === 'Public'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" class="block mt-2">
-            <a href="{{ route('form-revocation.index') }}" class="block">
-                <div class="bg-white hover:bg-blue-50 rounded-xl shadow-sm border border-gray-200 hover:border-blue-200 p-4 flex items-center gap-4 hover:shadow-md transition-all group cursor-pointer">
-                    <div class="flex-1 grid grid-cols-12 gap-4 items-center">
-                        <div class="col-span-4">
-                            <p class="text-xs text-gray-500 font-medium mb-0.5">Formulir</p>
-                            <p class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Permohonan Pencabutan Hak Akses</p>
-                        </div>
-                        <div class="col-span-4 text-center">
-                            <p class="text-xs text-gray-500 font-medium mb-0.5">Kategori</p>
-                            <p class="text-sm font-medium text-gray-900">Public</p>
-                        </div>
-                        <div class="col-span-4 flex justify-end items-center gap-4">
-                            <div class="text-right">
-                                <p class="text-xs text-gray-500 font-medium mb-0.5">Total Data</p>
-                                <p class="text-sm font-semibold text-gray-900">{{ \App\Models\FormRevocation::count() }} Formulir</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-
-
-        <!-- Empty State (Hanya muncul jika tab yang dipilih adalah Terbatas, karena All, Umum, Public sudah ada isinya) -->
-        <div x-show="activeTab === 'Terbatas'" style="display: none;" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="text-center py-12 absolute inset-0">
+        @empty
+        <!-- Empty State -->
+        <div class="text-center py-12 absolute inset-0">
             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
             <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada formulir</h3>
-            <p class="mt-1 text-sm text-gray-500">Tidak ada formulir dalam kategori <span x-text="activeTab"></span> ini.</p>
+            <p class="mt-1 text-sm text-gray-500">Tidak ada formulir dalam kategori ini.</p>
         </div>
+        @endforelse
+
+        @if($formulirs->hasPages())
+            <div class="mt-4 pt-4 border-t border-gray-100 pb-2">
+                {{ $formulirs->links('pagination::tailwind') }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection

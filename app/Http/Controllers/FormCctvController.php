@@ -6,23 +6,39 @@ use Illuminate\Http\Request;
 
 use App\Models\FormCctv;
 use App\Models\FormCctvItem;
-
+use App\Models\MasterCctv;
+use App\Models\MasterSigner;
 class FormCctvController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $forms = FormCctv::orderBy('created_at', 'desc')->get();
-        return view('form-cctv.index', compact('forms'));
+        $search = $request->query('search');
+        
+        $forms = FormCctv::when($search, function ($query, $search) {
+            return $query->where('no_ref', 'like', "%{$search}%")
+                         ->orWhere('id_cctv', 'like', "%{$search}%")
+                         ->orWhere('lokasi', 'like', "%{$search}%");
+        })->orderBy('created_at', 'desc')->paginate(5, ['*'], 'form_page');
+        
+        $forms->appends(['search' => $search]);
+        
+        $masterCctvs = MasterCctv::orderBy('id_cctv', 'asc')->paginate(5, ['*'], 'cctv_page');
+        $masterSigners = MasterSigner::orderBy('nama', 'asc')->paginate(5, ['*'], 'signer_page');
+        return view('form-cctv.index', compact('forms', 'masterCctvs', 'masterSigners', 'search'));
     }
 
     public function create()
     {
-        return view('form-cctv.create');
+        $masterCctvs = MasterCctv::orderBy('id_cctv', 'asc')->get();
+        $masterSigners = MasterSigner::orderBy('nama', 'asc')->get();
+        return view('form-cctv.create', compact('masterCctvs', 'masterSigners'));
     }
 
     public function createV2()
     {
-        return view('form-cctv.create-v2');
+        $masterCctvs = MasterCctv::orderBy('id_cctv', 'asc')->get();
+        $masterSigners = MasterSigner::orderBy('nama', 'asc')->get();
+        return view('form-cctv.create-v2', compact('masterCctvs', 'masterSigners'));
     }
 
     public function store(Request $request)
@@ -103,7 +119,10 @@ class FormCctvController extends Controller
             $items[$item->no - 1] = $item;
         }
         
-        return view('form-cctv.edit', compact('form', 'items'));
+        $masterCctvs = MasterCctv::orderBy('id_cctv', 'asc')->get();
+        $masterSigners = MasterSigner::orderBy('nama', 'asc')->get();
+        
+        return view('form-cctv.edit', compact('form', 'items', 'masterCctvs', 'masterSigners'));
     }
 
     public function update(Request $request, string $id)

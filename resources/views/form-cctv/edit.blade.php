@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Formulir CCTV')
+@section('title', 'Edit Formulir Pemeliharaan CCTV')
 
 @section('content')
 

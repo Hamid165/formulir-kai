@@ -304,13 +304,20 @@
 </style>
 
 
-<div class="a4-wrapper">
-    <div class="a4-container">
-        <form id="cctv-form" action="{{ $action }}" method="POST">
-            @csrf
-            @if(isset($method) && $method === 'PUT')
-                @method('PUT')
-            @endif
+<div class="a4-wrapper" style="flex-direction: column; align-items: center;">
+    <div style="width: 273mm; margin-bottom: 20px;">
+        <a href="{{ route('form-cctv.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors mb-6">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali ke Daftar Formulir Pemeliharaan CCTV
+        </a>
+    </div>
+    <div style="zoom: 1.3;">
+        <div class="a4-container">
+            <form id="cctv-form" action="{{ $action }}" method="POST">
+                @csrf
+                @if(isset($method) && $method === 'PUT')
+                    @method('PUT')
+                @endif
             
             <table class="header-table">
                 <tr>
@@ -367,19 +374,18 @@
                     <td class="kolom-label-kanan" style="border: none;">ID CCTV</td>
                     <td style="border: none;">: 
                         <div style="display: inline-block; position: relative; width: 150px;">
-                            <select id="id_cctv" name="id_cctv" class="form-input-inline input-garis-kanan ts-align-left" style="appearance: none; cursor: pointer;" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')" onchange="this.setCustomValidity('')">
+                            <select id="id_cctv" name="id_cctv" class="form-input-inline input-garis-kanan ts-align-left" style="appearance: none; cursor: pointer;" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')" onchange="updateLokasi(); this.setCustomValidity('');">
                                 <option value="">-- Pilih ID CCTV --</option>
-                                @for($i=1; $i<=10; $i++)
-                                @php $val = "CCTV-" . str_pad($i, 2, '0', STR_PAD_LEFT); @endphp
-                                <option value="{{ $val }}" {{ old('id_cctv', $form->id_cctv) == $val ? 'selected' : '' }}>{{ $val }}</option>
-                                @endfor
+                                @foreach($masterCctvs as $cctv)
+                                <option value="{{ $cctv->id_cctv }}" data-lokasi="{{ $cctv->lokasi }}" {{ old('id_cctv', $form->id_cctv) == $cctv->id_cctv ? 'selected' : '' }}>{{ $cctv->id_cctv }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td class="kolom-label-kanan" style="border: none;">LOKASI</td>
-                    <td style="border: none;">: <input type="text" name="lokasi" value="{{ old('lokasi', $form->lokasi) }}" class="form-input-inline input-garis-kanan" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')" oninput="this.setCustomValidity('')"></td>
+                    <td style="border: none;">: <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi', $form->lokasi) }}" class="form-input-inline input-garis-kanan" readonly placeholder="Otomatis Terisi" style="pointer-events: none; background: #f9f9f9;" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')"></td>
                 </tr>
             </table>
             </div>
@@ -446,8 +452,9 @@
                     <p style="position: relative;">
                         <select id="mengetahui_nama" name="mengetahui_nama" class="form-input-inline" style="width: 100%; text-align: center; appearance: none; cursor: pointer; text-align-last: center;" onchange="updateNipp(); this.setCustomValidity('');" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')">
                             <option value="">-- Pilih Nama --</option>
-                            <option value="Pitra" {{ old('mengetahui_nama', $form->mengetahui_nama) == 'Pitra' ? 'selected' : '' }}>Pitra</option>
-                            <option value="Hamid" {{ old('mengetahui_nama', $form->mengetahui_nama) == 'Hamid' ? 'selected' : '' }}>Hamid</option>
+                            @foreach($masterSigners as $signer)
+                            <option value="{{ $signer->nama }}" data-nipp="{{ $signer->nipp }}" {{ old('mengetahui_nama', $form->mengetahui_nama) == $signer->nama ? 'selected' : '' }}>{{ $signer->nama }}</option>
+                            @endforeach
                         </select>
                     </p>
                     <p style="text-align: center;">NIPP. <input type="text" id="mengetahui_nipp" name="mengetahui_nipp" value="{{ old('mengetahui_nipp', $form->mengetahui_nipp) }}" class="form-input-inline" style="width: 150px; text-align: center;" placeholder="NIPP" readonly></p>
@@ -455,7 +462,7 @@
             </div>
 
             <div style="text-align: right; display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; align-items: center;">
-                <a href="{{ route('form-cctv.index') }}" class="btn-kembali">Kembali</a>
+                <a href="{{ route('form-cctv.index') }}" class="btn-kembali">Batal</a>
                 <button type="submit" class="btn-submit" style="margin-top: 0;">{{ isset($method) && $method === 'PUT' ? 'Perbarui' : 'Simpan' }}</button>
             </div>
         </form>
@@ -559,15 +566,15 @@
     }
 
     function updateNipp() {
-        const select = document.getElementById('mengetahui_nama');
-        const nippInput = document.getElementById('mengetahui_nipp');
-        if (select.value === 'Pitra') {
-            nippInput.value = '123123123';
-        } else if (select.value === 'Hamid') {
-            nippInput.value = '321321';
-        } else {
-            nippInput.value = '';
-        }
+        const sel = document.getElementById('mengetahui_nama');
+        const option = sel.options[sel.selectedIndex];
+        document.getElementById('mengetahui_nipp').value = option ? (option.getAttribute('data-nipp') || '') : '';
+    }
+
+    function updateLokasi() {
+        const sel = document.getElementById('id_cctv');
+        const option = sel.options[sel.selectedIndex];
+        document.getElementById('lokasi').value = option ? (option.getAttribute('data-lokasi') || '') : '';
     }
 
     document.addEventListener('DOMContentLoaded', function() {

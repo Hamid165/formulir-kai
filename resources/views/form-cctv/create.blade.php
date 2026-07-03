@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Buat Formulir CCTV')
+@section('title', 'Buat Formulir Pemeliharaan CCTV')
 
 @section('content')
 

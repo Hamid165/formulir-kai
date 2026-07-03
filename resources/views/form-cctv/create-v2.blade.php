@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Formulir CCTV')
+@section('title', 'Tambah Formulir Pemeliharaan CCTV')
 
 @section('content')
 @include('components.custom-datepicker')
@@ -326,8 +326,20 @@
 
 <div class="v2-page">
 <div class="max-w-6xl mx-auto px-4">
+    <!-- Breadcrumb -->
+    <div class="mb-6">
+        <a href="{{ route('form-cctv.index') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors">
+            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Kembali ke Daftar Formulir Pemeliharaan CCTV
+        </a>
+    </div>
+
+    <!-- Header removed from outside -->
 
     <div class="v2-main-container">
+        <!-- Title Text Only Inside Box -->
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-8" style="letter-spacing: 1px;">FORMULIR PEMELIHARAAN CCTV</h1>
+        
     <form id="cctvForm" action="{{ route('form-cctv.store') }}" method="POST">
         @csrf
 
@@ -377,7 +389,7 @@
                 <div class="badge">2</div>
                 <div>
                     <h2>Data Perangkat</h2>
-                    <p>ID CCTV dan Lokasi Pemasangan</p>
+                    <p>ID CCTV dan Lokasi</p>
                 </div>
             </div>
             <div class="v2-card-body">
@@ -387,12 +399,11 @@
                         <label class="v2-label">ID CCTV <span class="req">*</span></label>
                         <div class="v2-input-wrap" style="position:relative;">
                             <svg class="v2-icon" style="z-index:10;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                            <select id="id_cctv" name="id_cctv" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')" onchange="this.setCustomValidity('')">
+                            <select id="id_cctv" name="id_cctv" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')" onchange="updateLokasi(); this.setCustomValidity('');">
                                 <option value="">-- Pilih ID CCTV --</option>
-                                @for($i=1; $i<=10; $i++)
-                                @php $val = "CCTV-" . str_pad($i, 2, '0', STR_PAD_LEFT); @endphp
-                                <option value="{{ $val }}" {{ old('id_cctv') == $val ? 'selected' : '' }}>{{ $val }}</option>
-                                @endfor
+                                @foreach($masterCctvs as $cctv)
+                                <option value="{{ $cctv->id_cctv }}" data-lokasi="{{ $cctv->lokasi }}" {{ old('id_cctv') == $cctv->id_cctv ? 'selected' : '' }}>{{ $cctv->id_cctv }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -401,7 +412,7 @@
                         <label class="v2-label">Lokasi <span class="req">*</span></label>
                         <div class="v2-input-wrap">
                             <svg class="v2-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <input type="text" name="lokasi" value="{{ old('lokasi') }}" class="v2-input" placeholder="Contoh: Stasiun Tugu Yogyakarta" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')" oninput="this.setCustomValidity('')">
+                            <input type="text" id="lokasi" name="lokasi" value="{{ old('lokasi') }}" class="v2-input-readonly" placeholder="Otomatis Terisi" readonly required>
                         </div>
                     </div>
 
@@ -463,7 +474,7 @@
                 </div>
             </div>
             <div class="v2-card-body">
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
 
                     <div class="v2-field">
                         <label class="v2-label">Tanggal Pengesahan (Yogyakarta) <span class="req">*</span></label>
@@ -479,13 +490,13 @@
                             <svg class="v2-icon" style="z-index:10;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                             <select id="mengetahui_nama" name="mengetahui_nama" onchange="updateNipp(); this.setCustomValidity('');" required oninvalid="this.setCustomValidity('Bagian ini harus diisi')">
                                 <option value="">-- Pilih Nama --</option>
-                                <option value="Pitra">Pitra</option>
-                                <option value="Hamid">Hamid</option>
+                                @foreach($masterSigners as $signer)
+                                <option value="{{ $signer->nama }}" data-nipp="{{ $signer->nipp }}" {{ old('mengetahui_nama') == $signer->nama ? 'selected' : '' }}>{{ $signer->nama }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
 
-                    <div></div>
                     <div class="v2-field">
                         <label class="v2-label">NIPP <span style="color:#94a3b8; font-weight:400; text-transform:none; font-size:11px;">(otomatis)</span></label>
                         <div class="v2-input-wrap">
@@ -569,8 +580,15 @@
     }
 
     function updateNipp() {
-        const v = document.getElementById('mengetahui_nama').value;
-        document.getElementById('mengetahui_nipp').value = v === 'Pitra' ? '123123123' : v === 'Hamid' ? '321321' : '';
+        const sel = document.getElementById('mengetahui_nama');
+        const option = sel.options[sel.selectedIndex];
+        document.getElementById('mengetahui_nipp').value = option ? (option.getAttribute('data-nipp') || '') : '';
+    }
+
+    function updateLokasi() {
+        const sel = document.getElementById('id_cctv');
+        const option = sel.options[sel.selectedIndex];
+        document.getElementById('lokasi').value = option ? (option.getAttribute('data-lokasi') || '') : '';
     }
 
     document.addEventListener('DOMContentLoaded', function() {

@@ -185,7 +185,7 @@
     <div class="a4-container relative">
         <!-- Tombol diletakkan di pojok kanan atas (text-align: right) -->
         <div class="no-print" style="margin-bottom: 20px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
-            <a href="{{ route('form-cctv.index') }}" class="btn-kembali">Kembali</a>
+            <a href="{{ route('form-cctv.index') }}" class="btn-kembali">Batal</a>
             <button onclick="window.print()" class="btn-print">Print</button>
         </div>
 

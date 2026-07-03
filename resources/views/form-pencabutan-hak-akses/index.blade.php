@@ -36,17 +36,16 @@
 </script>
 @endif
 
-<!-- Tombol Kembali -->
 <div class="mb-4 flex justify-start">
-    <a href="{{ route('formulir.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">
+    <a href="{{ route('formulir.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         Kembali ke Katalog
     </a>
 </div>
 
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8" x-data="{ search: '' }">
 <!-- Header -->
-<div class="flex justify-between items-start mb-8">
+<div class="flex justify-between items-end mb-8">
     <div class="flex items-center gap-4">
         <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center shadow-sm">
             <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -56,11 +55,17 @@
             <p class="text-sm text-gray-500 mt-1">Daftar semua formulir permohonan pencabutan hak akses</p>
         </div>
     </div>
-</div>
-
-<!-- Toolbar -->
-<div class="flex justify-end items-center mb-4 px-2">
-    <div class="flex items-center gap-2">
+    
+    <!-- Search and Actions aligned to bottom -->
+    <div class="flex items-center gap-3">
+        <!-- Search Input -->
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <input type="text" x-model="search" placeholder="Cari data..." class="w-64 pl-10 pr-4 h-[40px] bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+        </div>
+        
         <a href="{{ route('form-pencabutan-hak-akses.create') }}" class="inline-flex items-center justify-center px-4 h-[40px] bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition-colors w-auto">
             Tambah Formulir
         </a>
@@ -70,7 +75,7 @@
 <!-- List of Submissions -->
 <div class="space-y-2">
     @forelse ($forms as $form)
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center gap-4 hover:shadow-md transition-shadow group relative">
+    <div x-show="search === '' || $el.innerText.toLowerCase().includes(search.toLowerCase())" class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center gap-4 hover:shadow-md transition-shadow group relative">
 
         <div class="flex-1 grid grid-cols-12 gap-4 items-center">
             <div class="col-span-2">
