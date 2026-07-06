@@ -199,11 +199,11 @@
                     SISTEM INFORMASI
                 </td>
                 <td style="width: 13%;">No. Dokumen</td>
-                <td style="width: 22%;">: FR.SM/TI/015.013/10-2020</td>
+                <td style="width: 22%;">: {{ $formTemplate->no_dokumen ?? 'FR.SM/TI/015.013/10-2020' }}</td>
             </tr>
             <tr>
                 <td>Tanggal</td>
-                <td>: 12 Oktober 2020</td>
+                <td>: {{ $formTemplate->tanggal_dokumen ?? '12 Oktober 2020' }}</td>
             </tr>
             <tr>
                 <td rowspan="2" style="text-align: center;">
@@ -213,7 +213,7 @@
                     FORMULIR CHECKLIST PEMELIHARAAN CCTV
                 </td>
                 <td>Versi</td>
-                <td>: 002-2020</td>
+                <td>: {{ $formTemplate->versi_dokumen ?? '002-2020' }}</td>
             </tr>
             <tr>
                 <td>Halaman</td>
@@ -270,6 +270,7 @@
                     // Retrieve items and pad array to at least 20 rows
                     $items = $form->items->keyBy('no')->toArray();
                     $maxItems = max(20, count($items) > 0 ? max(array_keys($items)) : 0);
+                    $lastFilledNo = count($items) > 0 ? max(array_keys($items)) : 0;
                 @endphp
                 
                 @for ($i = 1; $i <= $maxItems; $i++)
@@ -281,7 +282,12 @@
                     @endphp
                     <tr>
                         <td class="text-center">{{ $i }}</td>
-                        <td class="text-center">{{ $item['tanggal'] ?? '' }}</td>
+                        <td class="text-center">
+                            {{ $item['tanggal'] ?? '' }}
+                            @if ($i === $lastFilledNo + 1)
+                                <span>-eof</span>
+                            @endif
+                        </td>
                         <td class="text-center">{{ $isPerawatan }}</td>
                         <td class="text-center">{{ $isPerbaikan }}</td>
                         <td class="text-center">{{ $item['keterangan'] ?? '' }}</td>

@@ -223,6 +223,7 @@
         let currentDate = new Date(); 
         let selectedDate = new Date();
         let currentMinDate = new Date();
+        let currentDisabledDates = [];
 
         function parseDateString(str, format) {
             if (!str) return null;
@@ -307,7 +308,8 @@
                 const cellDate = new Date(year, month, i);
                 
                 let isSelected = i === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear();
-                let isDisabled = cellDate < currentMinDate;
+                let cellTime = cellDate.getTime();
+                let isDisabled = cellDate < currentMinDate || currentDisabledDates.includes(cellTime);
                 
                 if (isDisabled) {
                     dayEl.className = 'dp-day dp-disabled';
@@ -375,6 +377,21 @@
                         break;
                     }
                 }
+            }
+
+            // Gather all currently selected dates in the CCTV form table to disable them
+            currentDisabledDates = [];
+            if (input.name && input.name.match(/items\[(\d+)\]\[tanggal\]/)) {
+                let allInputs = document.querySelectorAll('input[name*="[tanggal]"]');
+                allInputs.forEach(inp => {
+                    if (inp !== input && inp.value) {
+                        let parsedD = parseDateString(inp.value, inp.getAttribute('data-format'));
+                        if (parsedD) {
+                            parsedD.setHours(0, 0, 0, 0);
+                            currentDisabledDates.push(parsedD.getTime());
+                        }
+                    }
+                });
             }
 
             // Parse existing date if available

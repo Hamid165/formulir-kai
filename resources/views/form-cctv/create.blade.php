@@ -7,7 +7,7 @@
 @include('form-cctv.form', [
     'action' => route('form-cctv.store'),
     'method' => 'POST',
-    'form' => new \App\Models\FormCctv()
+    'form' => new \App\Models\FormCctv\FormCctv()
 ])
 
 @endsection

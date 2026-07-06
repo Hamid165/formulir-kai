@@ -207,7 +207,7 @@
                         </div>
                         <div class="flex gap-2 justify-end">
                             <button type="button" @click="editing = false" class="bg-red-500 hover:bg-red-600 text-white px-4 h-[32px] rounded-lg text-sm font-semibold transition-colors shadow-sm">Batal</button>
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 h-[32px] rounded-lg text-sm font-semibold transition-colors shadow-sm">Simpan</button>
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 h-[32px] rounded-lg text-sm font-semibold transition-colors shadow-sm">Simpan</button>
                         </div>
                     </form>
                 </div>
@@ -292,7 +292,7 @@
                         </div>
                         <div class="flex gap-2 justify-end">
                             <button type="button" @click="editing = false" class="bg-red-500 hover:bg-red-600 text-white px-4 h-[32px] rounded-lg text-sm font-semibold transition-colors shadow-sm">Batal</button>
-                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 h-[32px] rounded-lg text-sm font-semibold transition-colors shadow-sm">Simpan</button>
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 h-[32px] rounded-lg text-sm font-semibold transition-colors shadow-sm">Simpan</button>
                         </div>
                     </form>
                 </div>

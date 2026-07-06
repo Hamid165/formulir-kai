@@ -33,7 +33,8 @@ class FormCctvController extends Controller
         $usedIds = FormCctv::pluck('id_cctv')->toArray();
         $masterCctvs = MasterCctv::whereNotIn('id_cctv', $usedIds)->orderBy('id_cctv', 'asc')->get();
         $masterSigners = MasterSigner::orderBy('nama', 'asc')->get();
-        return view('form-cctv.create', compact('masterCctvs', 'masterSigners'));
+        $formTemplate = \App\Models\FormTemplate::where('nama', 'Pemeliharaan CCTV')->first();
+        return view('form-cctv.create', compact('masterCctvs', 'masterSigners', 'formTemplate'));
     }
 
     public function store(Request $request)
@@ -45,7 +46,7 @@ class FormCctvController extends Controller
             'id_cctv' => 'nullable|string|max:255|unique:form_cctvs,id_cctv',
             'lokasi' => 'nullable|string|max:255',
             'items' => 'nullable|array',
-            'items.*.tanggal' => 'nullable|string|max:255',
+            'items.*.tanggal' => 'nullable|string|max:255|distinct',
             'items.*.perawatan' => 'nullable',
             'items.*.perbaikan' => 'nullable',
             'items.*.keterangan' => 'nullable|string',
@@ -54,6 +55,8 @@ class FormCctvController extends Controller
             'mengetahui_nama' => 'nullable|string|max:255',
             'mengetahui_nipp' => 'nullable|string|max:255',
             'mengetahui_jabatan' => 'nullable|string|max:255',
+        ], [
+            'items.*.tanggal.distinct' => 'Tanggal kegiatan pemeliharaan tidak boleh ada yang sama.'
         ]);
 
         $form = FormCctv::create([
@@ -98,7 +101,8 @@ class FormCctvController extends Controller
     public function show(string $id)
     {
         $form = FormCctv::with('items')->findOrFail($id);
-        return view('form-cctv.show', compact('form'));
+        $formTemplate = \App\Models\FormTemplate::where('nama', 'Pemeliharaan CCTV')->first();
+        return view('form-cctv.show', compact('form', 'formTemplate'));
     }
 
     public function edit(string $id)
@@ -113,8 +117,9 @@ class FormCctvController extends Controller
         
         $masterCctvs = MasterCctv::orderBy('id_cctv', 'asc')->get();
         $masterSigners = MasterSigner::orderBy('nama', 'asc')->get();
+        $formTemplate = \App\Models\FormTemplate::where('nama', 'Pemeliharaan CCTV')->first();
         
-        return view('form-cctv.edit', compact('form', 'items', 'masterCctvs', 'masterSigners'));
+        return view('form-cctv.edit', compact('form', 'items', 'masterCctvs', 'masterSigners', 'formTemplate'));
     }
 
     public function update(Request $request, string $id)
@@ -128,7 +133,7 @@ class FormCctvController extends Controller
             'id_cctv' => 'nullable|string|max:255',
             'lokasi' => 'nullable|string|max:255',
             'items' => 'nullable|array',
-            'items.*.tanggal' => 'nullable|string|max:255',
+            'items.*.tanggal' => 'nullable|string|max:255|distinct',
             'items.*.perawatan' => 'nullable',
             'items.*.perbaikan' => 'nullable',
             'items.*.keterangan' => 'nullable|string',
@@ -137,6 +142,8 @@ class FormCctvController extends Controller
             'mengetahui_nama' => 'nullable|string|max:255',
             'mengetahui_nipp' => 'nullable|string|max:255',
             'mengetahui_jabatan' => 'nullable|string|max:255',
+        ], [
+            'items.*.tanggal.distinct' => 'Tanggal kegiatan pemeliharaan tidak boleh ada yang sama.'
         ]);
 
         $form->update([

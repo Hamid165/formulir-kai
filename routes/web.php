@@ -23,7 +23,7 @@ Route::get('/', function () {
         ->concat(\App\Models\FormCctv\FormCctv::latest()->take(5)->get()->map(function($item) {
             $item->type = 'CCTV';
             $item->route = route('form-cctv.show', $item->id);
-            $item->title = "Formulir Pemeliharaan CCTV - {$item->id_cctv}";
+            $item->title = "Pemeliharaan CCTV - {$item->id_cctv}";
             return $item;
         }))
         ->concat(\App\Models\FormPencabutanHakAkses::latest()->take(5)->get()->map(function($item) {
@@ -38,23 +38,35 @@ Route::get('/', function () {
     return view('dashboard', compact('totalKategori', 'totalJenisFormulir', 'totalFormulirBulanIni', 'totalPengguna', 'recentForms'));
 })->name('dashboard');
 
+use App\Http\Controllers\FormTemplateController;
+
+Route::put('/formulir/template/{id}', [FormTemplateController::class, 'update'])->name('formulir.template.update');
+
 Route::get('/formulir', function (\Illuminate\Http\Request $request) {
     $kategori = $request->query('kategori', 'All');
     
-    $formulirs = collect([
-        [
-            'nama' => 'Formulir Pemeliharaan CCTV',
-            'kategori' => 'Umum',
-            'route' => route('form-cctv.index'),
-            'total' => \App\Models\FormCctv\FormCctv::count()
-        ],
-        [
-            'nama' => 'Permohonan Pencabutan Hak Akses',
-            'kategori' => 'Public',
-            'route' => route('form-pencabutan-hak-akses.index'),
-            'total' => \App\Models\FormPencabutanHakAkses::count()
-        ],
-    ]);
+    $templates = \App\Models\FormTemplate::all();
+    
+    $formulirs = collect();
+    foreach ($templates as $template) {
+        $total = 0;
+        if ($template->nama === 'Pemeliharaan CCTV') {
+            $total = \App\Models\FormCctv\FormCctv::count();
+        } elseif ($template->nama === 'Permohonan Pencabutan Hak Akses') {
+            $total = \App\Models\FormPencabutanHakAkses::count();
+        }
+        
+        $formulirs->push([
+            'id' => $template->id,
+            'nama' => $template->nama,
+            'kategori' => $template->kategori,
+            'route' => route($template->route_name),
+            'total' => $total,
+            'no_dokumen' => $template->no_dokumen,
+            'tanggal_dokumen' => $template->tanggal_dokumen,
+            'versi_dokumen' => $template->versi_dokumen
+        ]);
+    }
 
     if ($kategori !== 'All') {
         $formulirs = $formulirs->where('kategori', $kategori);

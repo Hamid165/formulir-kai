@@ -158,7 +158,7 @@
     }
     
     .btn-submit {
-        background-color: #4CAF50;
+        background-color: #16a34a; /* green-600 */
         color: white;
         padding: 4px 12px;
         height: 30px;
@@ -173,28 +173,28 @@
         transition: background 0.2s;
     }
     .btn-submit:hover {
-        background-color: #388e3c;
+        background-color: #15803d; /* green-700 */
     }
     
     .btn-kembali {
-        display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 4px 12px; background-color: #f44336; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: inherit; font-size: 11px; box-sizing: border-box;
+        display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 4px 12px; background-color: #ef4444; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: inherit; font-size: 11px; box-sizing: border-box;
         transition: background-color 0.2s;
     }
     .btn-kembali:hover {
-        background-color: #d32f2f;
+        background-color: #dc2626;
     }
 
     .btn-tambah-baris {
-        display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 4px 12px; background-color: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;
+        display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 4px 12px; background-color: #f59e0b; /* amber-500 */ color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px;
         transition: background-color 0.2s;
     }
     .btn-tambah-baris:hover {
-        background-color: #e67e22;
+        background-color: #d97706; /* amber-600 */
     }
     
     .btn-edit-ba {
-        background-color: #fffbeb;
-        color: #f59e0b;
+        background-color: #fffbeb; /* amber-50 */
+        color: #d97706; /* amber-600 */
         border: none;
         cursor: pointer;
         padding: 6px;
@@ -205,30 +205,29 @@
         transition: all 0.2s;
     }
     .btn-edit-ba:hover {
-        background-color: #fef3c7;
-        color: #b45309;
+        background-color: #fef3c7; /* amber-100 */
+        color: #b45309; /* amber-700 */
     }
     
     .btn-delete-row {
         position: absolute; 
-        right: -24px; 
+        right: -32px; 
         top: 50%; 
         transform: translateY(-50%); 
-        background-color: #e74c3c; 
+        background-color: #fef2f2; /* red-50 */
         border: none; 
-        color: white; 
+        color: #dc2626; /* red-600 */
         cursor: pointer; 
-        padding: 3px 5px; 
-        border-radius: 3px;
+        padding: 6px; 
+        border-radius: 6px;
         display: flex; 
         align-items: center; 
         justify-content: center;
         transition: all 0.2s;
-        box-shadow: 0 1px 2px rgba(231, 76, 60, 0.3);
     }
     .btn-delete-row:hover {
-        background-color: #c0392b;
-        color: white;
+        background-color: #fee2e2; /* red-100 */
+        color: #b91c1c; /* red-700 */
         transform: translateY(-50%) scale(1.1);
     }
     
@@ -350,11 +349,11 @@
                         SISTEM INFORMASI
                     </td>
                     <td style="width: 13%;">No. Dokumen</td>
-                    <td style="width: 22%;">: FR.SM/TI/015.013/10-2020</td>
+                    <td style="width: 22%;">: {{ $formTemplate->no_dokumen ?? 'FR.SM/TI/015.013/10-2020' }}</td>
                 </tr>
                 <tr>
                     <td>Tanggal</td>
-                    <td>: 12 Oktober 2020</td>
+                    <td>: {{ $formTemplate->tanggal_dokumen ?? '12 Oktober 2020' }}</td>
                 </tr>
                 <tr>
                     <td rowspan="2" style="text-align: center;">
@@ -364,7 +363,7 @@
                         FORMULIR CHECKLIST PEMELIHARAAN CCTV
                     </td>
                     <td>Versi</td>
-                    <td>: 002-2020</td>
+                    <td>: {{ $formTemplate->versi_dokumen ?? '002-2020' }}</td>
                 </tr>
                 <tr>
                     <td>Halaman</td>
@@ -941,5 +940,6 @@ function showImportAlert(message, type) {
         }
     }, 5000);
 }
+
 </script>
 @endsection
