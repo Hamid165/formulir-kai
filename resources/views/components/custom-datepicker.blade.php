@@ -227,7 +227,8 @@
 
         function parseDateString(str, format) {
             if (!str) return null;
-            if (format === 'id') {
+            if (format === 'id' || format === 'id-dash') {
+                if (format === 'id-dash') str = str.replace(/\s*-\s*/g, ' ');
                 const parts = str.split(' ');
                 if (parts.length === 3) {
                     const day = parseInt(parts[0], 10);
@@ -422,9 +423,13 @@
                 const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
                 const day = String(selectedDate.getDate()).padStart(2, '0');
                 
-                if (currentTargetInput.getAttribute('data-format') === 'id') {
+                if (currentTargetInput.getAttribute('data-format') === 'id' || currentTargetInput.getAttribute('data-format') === 'id-dash') {
                     const monthNamesId = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-                    currentTargetInput.value = `${day} ${monthNamesId[selectedDate.getMonth()]} ${year}`;
+                    if (currentTargetInput.getAttribute('data-format') === 'id-dash') {
+                        currentTargetInput.value = `${day} - ${monthNamesId[selectedDate.getMonth()]} - ${year}`;
+                    } else {
+                        currentTargetInput.value = `${day} ${monthNamesId[selectedDate.getMonth()]} ${year}`;
+                    }
                 } else {
                     currentTargetInput.value = `${day}-${month}-${year}`;
                 }

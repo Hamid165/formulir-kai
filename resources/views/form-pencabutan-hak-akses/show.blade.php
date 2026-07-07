@@ -231,11 +231,11 @@
                     SISTEM INFORMASI
                 </td>
                 <td class="info-label">Nomor</td>
-                <td class="info-value">FR.SM/TI/013.004/10-2020</td>
+                <td class="info-value">{{ $formTemplate->no_dokumen ?? 'FR.SM/TI/013.004/10-2020' }}</td>
             </tr>
             <tr>
                 <td class="info-label">Tanggal</td>
-                <td class="info-value">12 Oktober 2020</td>
+                <td class="info-value">{{ $formTemplate->tanggal_dokumen ?? '12 Oktober 2020' }}</td>
             </tr>
             <tr>
                 <td rowspan="2" class="empty-box"></td>
@@ -244,7 +244,7 @@
                     PERMOHONAN PENCABUTAN HAK AKSES
                 </td>
                 <td class="info-label">Versi</td>
-                <td class="info-value">002-2020</td>
+                <td class="info-value">{{ $formTemplate->versi_dokumen ?? '002-2020' }}</td>
             </tr>
             <tr>
                 <td class="info-label">Halaman</td>
@@ -316,7 +316,7 @@
                     $maxItems = max(4, count($items));
                 @endphp
                 
-                @for ($i = 1; $i <= $maxItems; $i++)
+                @for ($i = 0; $i < $maxItems; $i++)
                     @php
                         $item = $items[$i] ?? null;
                     @endphp
@@ -352,9 +352,9 @@
                 <div>
                     Permohonan Pencabutan Hak Akses ini: 
                     @if($form->status_persetujuan == 'DISETUJUI')
-                        <strong>DISETUJUI</strong> <span style="text-decoration: line-through; color: #777;">/ TIDAK DISETUJUI</span>*
+                        DISETUJUI <span style="text-decoration: line-through; color: #777;">/ TIDAK DISETUJUI</span>*
                     @else
-                        <span style="text-decoration: line-through; color: #777;">DISETUJUI /</span> <strong>TIDAK DISETUJUI</strong>*
+                        <span style="text-decoration: line-through; color: #777;">DISETUJUI /</span> TIDAK DISETUJUI*
                     @endif
                 </div>
                 <div style="margin-top: 15px;">
@@ -367,7 +367,7 @@
                         @endif
                     </span>
                 </div>
-                <div style="margin-top: 5px; font-weight: bold;">
+                <div style="margin-top: 5px;">
                     {{ $form->jabatan_mengetahui ?: 'Manajemen Puncak' }}
                 </div>
                 <div style="margin-top: 80px;">

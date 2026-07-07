@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\FormPencabutanHakAkses;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FormPencabutanHakAkses extends Model
 {
+    use HasFactory;
+
     protected $table = 'form_revocations';
 
     protected $fillable = [

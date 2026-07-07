@@ -3,17 +3,20 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\FormCctv\FormCctvController;
-use App\Http\Controllers\FormPencabutanHakAksesController;
+use App\Http\Controllers\FormPencabutanHakAkses\FormPencabutanHakAksesController;
 use App\Http\Controllers\FormCctv\MasterCctvController;
 use App\Http\Controllers\FormCctv\MasterSignerController;
-
+use App\Http\Controllers\FormPencabutanHakAkses\MasterPemohonController;
+// ==============================================================
+// ROUTES DASHBOARD (Data Dummy & Ringkasan)
+// ==============================================================
 Route::get('/', function () {
     $totalKategori = 1; // Dummy untuk saat ini
     $totalJenisFormulir = 2; // Baru ada CCTV dan Pencabutan Hak Akses
     
     $totalFormulirBulanIni = \App\Models\FormCctv\FormCctv::whereMonth('created_at', date('m'))
                                 ->whereYear('created_at', date('Y'))
-                                ->count() + \App\Models\FormPencabutanHakAkses::whereMonth('created_at', date('m'))
+                                ->count() + \App\Models\FormPencabutanHakAkses\FormPencabutanHakAkses::whereMonth('created_at', date('m'))
                                 ->whereYear('created_at', date('Y'))
                                 ->count();
                                 
@@ -26,7 +29,7 @@ Route::get('/', function () {
             $item->title = "Pemeliharaan CCTV - {$item->id_cctv}";
             return $item;
         }))
-        ->concat(\App\Models\FormPencabutanHakAkses::latest()->take(5)->get()->map(function($item) {
+        ->concat(\App\Models\FormPencabutanHakAkses\FormPencabutanHakAkses::latest()->take(5)->get()->map(function($item) {
             $item->type = 'Pencabutan Hak Akses';
             $item->route = route('form-pencabutan-hak-akses.show', $item->id);
             $item->title = "Pencabutan Hak Akses - {$item->nama_pemohon}";
@@ -40,6 +43,9 @@ Route::get('/', function () {
 
 use App\Http\Controllers\FormTemplateController;
 
+// ==============================================================
+// ROUTES KATALOG FORMULIR & TEMPLATE
+// ==============================================================
 Route::put('/formulir/template/{id}', [FormTemplateController::class, 'update'])->name('formulir.template.update');
 
 Route::get('/formulir', function (\Illuminate\Http\Request $request) {
@@ -53,7 +59,7 @@ Route::get('/formulir', function (\Illuminate\Http\Request $request) {
         if ($template->nama === 'Pemeliharaan CCTV') {
             $total = \App\Models\FormCctv\FormCctv::count();
         } elseif ($template->nama === 'Permohonan Pencabutan Hak Akses') {
-            $total = \App\Models\FormPencabutanHakAkses::count();
+            $total = \App\Models\FormPencabutanHakAkses\FormPencabutanHakAkses::count();
         }
         
         $formulirs->push([
@@ -91,15 +97,31 @@ Route::get('/formulir', function (\Illuminate\Http\Request $request) {
     ]);
 })->name('formulir.index');
 
+// ==============================================================
+// ROUTES FORMULIR PEMELIHARAAN CCTV
+// ==============================================================
 Route::get('form-cctv/create-v2', [FormCctvController::class, 'createV2'])->name('form-cctv.create-v2');
 Route::post('form-cctv/parse-excel', [FormCctvController::class, 'parseExcel'])->name('form-cctv.parse-excel');
 Route::get('form-cctv/template-items', [FormCctvController::class, 'downloadTemplateItems'])->name('form-cctv.template-items');
 Route::resource('form-cctv', FormCctvController::class);
 
-Route::resource('form-pencabutan-hak-akses', FormPencabutanHakAksesController::class);
-
+// Master Data CCTV (List Kamera & Lokasi)
 Route::post('master-cctv/import', [MasterCctvController::class, 'import'])->name('master-cctv.import');
 Route::get('master-cctv/template', [MasterCctvController::class, 'downloadTemplate'])->name('master-cctv.template');
 Route::resource('master-cctv', MasterCctvController::class)->only(['store', 'update', 'destroy']);
 
+// Master Data Penandatangan (Signer) CCTV
 Route::resource('master-signer', MasterSignerController::class)->only(['store', 'update', 'destroy']);
+
+
+// ==============================================================
+// ROUTES FORMULIR PENCABUTAN HAK AKSES
+// ==============================================================
+Route::resource('form-pencabutan-hak-akses', FormPencabutanHakAksesController::class);
+
+// Master Data Nama & NIP Pemohon (Untuk Formulir Hak Akses)
+Route::post('master-pemohon/import', [MasterPemohonController::class, 'import'])->name('master-pemohon.import');
+Route::get('master-pemohon/template', [MasterPemohonController::class, 'downloadTemplate'])->name('master-pemohon.template');
+Route::post('master-pemohon', [MasterPemohonController::class, 'store'])->name('master-pemohon.store');
+Route::put('master-pemohon/{id}', [MasterPemohonController::class, 'update'])->name('master-pemohon.update');
+Route::delete('master-pemohon/{id}', [MasterPemohonController::class, 'destroy'])->name('master-pemohon.destroy');
