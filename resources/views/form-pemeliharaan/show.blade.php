@@ -10,32 +10,32 @@
         body { font-family: Arial, Helvetica, sans-serif; font-size: 11px; background-color: #525659; padding: 20px; display: flex; justify-content: center; color: black; }
         .a4-container { width: 297mm; min-height: 210mm; background: white; padding: 12mm 15mm; box-sizing: border-box; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         table { border-collapse: collapse; width: 100%; }
-        
+
         /* Kop Surat */
         .header-table td { border: 1px solid black; padding: 4px 6px; vertical-align: middle; }
         .title-text { font-size: 11px; font-weight: bold; text-align: center; }
         .terbatas-box { border: 2px solid #eab308; color: #eab308; padding: 4px 14px; font-weight: bold; font-size: 13px; display: inline-block; }
-        
+
         /* Info Section */
         .info-table { width: 35%; border-collapse: collapse; margin-bottom: 5px; }
         .info-table td { border: 1px solid black; padding: 3px 5px; }
         .kolom-label { width: 95px; font-weight: bold; }
-        
+
         .info-text-table { width: 100%; border: none; margin-top: 5px; }
         .info-text-table td { border: none; padding: 3px 0; vertical-align: top; }
         .label-cell { width: 130px; font-weight: bold; }
         .colon-cell { width: 15px; }
-        
+
         /* Main Table */
         .main-table { margin-top: 10px; }
         .main-table th, .main-table td { border: 1px solid black; padding: 4px 5px; font-size: 10px; vertical-align: middle; }
         .main-table th { text-align: center; background-color: #b0c4de; font-weight: bold; }
         .sub-header { font-weight: normal; font-size: 8px; display: block; margin-top: 2px; }
         .text-center { text-align: center; }
-        
+
         /* Catatan */
         .catatan-box { border: 1px solid black; padding: 6px; margin-top: 12px; min-height: 40px; font-size: 10px; }
-        
+
         /* Keterangan Bawah */
         .keterangan-bawah { margin-top: 25px; font-size: 10px; }
 
@@ -49,14 +49,13 @@
         .btn-confirm { width: 160px; height: 34px; line-height: 34px; padding: 0; background-color: #7c3aed; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; font-family: inherit; font-size: 13px; text-align: center; box-sizing: border-box; display: inline-block; transition: background-color 0.2s; }
         .btn-confirm:hover { background-color: #6d28d9; }
         @endif
-        
+
         @media print {
             body { margin: 0; padding: 0; background-color: white; }
             .a4-container { box-shadow: none; width: 100%; min-height: auto; padding: 0; }
             .no-print { display: none !important; }
         }
         @page { size: A4 landscape; margin: 12mm 15mm; }
-        .page-number:before { content: counter(page) " dari " counter(pages); }
     </style>
 </head>
 <body>
@@ -101,7 +100,7 @@
             </tr>
             <tr>
                 <td>Halaman</td>
-                <td>: <span class="page-number"></span></td>
+                <td>: 1 dari 1</td>
             </tr>
         </table>
 
@@ -112,13 +111,13 @@
                 <tr><td class="kolom-label">Tanggal</td><td>: {{ $form_pemeliharaan->tanggal ? \Carbon\Carbon::parse($form_pemeliharaan->tanggal)->locale('id')->isoFormat('D MMMM Y') : '___________________________' }}</td></tr>
                 <tr><td class="kolom-label">Business Area</td><td>: {{ $form_pemeliharaan->business_area ?: '___________________________' }}</td></tr>
             </table>
-            
+
             <table class="info-text-table">
                 <tr>
                     <td class="label-cell">Petugas</td>
                     <td class="colon-cell">:</td>
                     <td style="width: 35%;">{{ $form_pemeliharaan->petugas_name ?: '(pelaksana pemeliharaan)' }}</td>
-                    
+
                     <td class="label-cell" style="width: 140px;">Jenis Pemeliharaan</td>
                     <td class="colon-cell">:</td>
                     <td>
@@ -135,7 +134,7 @@
                     <td class="label-cell">Lokasi</td>
                     <td class="colon-cell">:</td>
                     <td>{{ $form_pemeliharaan->lokasi ?: '(tempat keberadaan aset)' }}</td>
-                    
+
                     <td class="label-cell">Bulan</td>
                     <td class="colon-cell">:</td>
                     <td>{{ $form_pemeliharaan->bulan_pemeliharaan ?: '(bulan waktu pemeliharaan)' }}</td>
@@ -206,10 +205,10 @@
                 </td>
             </tr>
         </table>
-        
+
         <div class="keterangan-bawah">
             <strong>Keterangan :</strong><br>
-            (*) Bulatkan salah satu
+            (*) Coret yang tidak perlu
         </div>
     </div>
 </div>
