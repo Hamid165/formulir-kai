@@ -42,9 +42,16 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Business Area</label>
-                <input type="text" name="business_area" value="{{ old('business_area', $form->business_area ?? '') }}"
-                       placeholder="Contoh: DAOP 6 Yogyakarta"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex items-center gap-2">
+                    <input type="text" id="business_area_input" name="business_area"
+                           value="{{ old('business_area', $form->business_area ?? 'DAOP 6 Yogyakarta') }}"
+                           class="w-full border border-gray-200 bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-500 focus:outline-none"
+                           style="pointer-events: none;" readonly>
+                    <button type="button" onclick="unlockBusinessArea()" title="Edit Business Area"
+                            class="shrink-0 p-2 text-gray-400 hover:text-blue-600 border border-gray-200 rounded-lg hover:border-blue-400 transition-colors bg-white">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                </div>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">Lokasi</label>
@@ -130,8 +137,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">Jenis Perangkat (auto-fill)</label>
-                            <input type="text" readonly value="{{ $item->perangkat->jenis_perangkat ?? '' }}" class="jenis-perangkat w-full border border-gray-200 bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-500" placeholder="Otomatis terisi">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Deskripsi Perangkat</label>
+                            <input type="text" name="items[{{ $idx }}][deskripsi]" value="{{ $item->deskripsi ?? '' }}" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Spesifikasi / deskripsi perangkat">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">Pekerjaan</label>
@@ -169,8 +176,8 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1">Jenis Perangkat (auto-fill)</label>
-                            <input type="text" readonly class="jenis-perangkat w-full border border-gray-200 bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-500" placeholder="Otomatis terisi">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Deskripsi Perangkat</label>
+                            <input type="text" name="items[0][deskripsi]" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Spesifikasi / deskripsi perangkat">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 mb-1">Pekerjaan</label>
@@ -238,8 +245,8 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Jenis Perangkat (auto-fill)</label>
-                    <input type="text" readonly class="jenis-perangkat w-full border border-gray-200 bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-500" placeholder="Otomatis terisi">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Deskripsi Perangkat</label>
+                    <input type="text" name="items[${idx}][deskripsi]" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Spesifikasi / deskripsi perangkat">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Pekerjaan</label>
@@ -289,5 +296,21 @@
 
     // Bind all existing selects
     document.querySelectorAll('.perangkat-select').forEach(bindSelectListener);
+
+    function unlockBusinessArea() {
+        var input = document.getElementById('business_area_input');
+        if (input.hasAttribute('readonly')) {
+            input.removeAttribute('readonly');
+            input.style.pointerEvents = 'auto';
+            input.style.background = 'transparent';
+            input.className = input.className.replace('bg-gray-50 text-gray-500', 'bg-white text-gray-800');
+            input.classList.add('border-blue-400', 'ring-2', 'ring-blue-200');
+            input.focus();
+        } else {
+            input.setAttribute('readonly', 'readonly');
+            input.style.pointerEvents = 'none';
+            input.style.background = '#f9fafb';
+        }
+    }
 </script>
 @endsection

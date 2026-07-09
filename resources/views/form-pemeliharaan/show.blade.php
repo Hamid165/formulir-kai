@@ -167,7 +167,7 @@
                         <td class="text-center">{{ $i + 1 }}</td>
                         <td class="text-center">{{ $item?->perangkat?->jenis_perangkat ?? '' }}</td>
                         <td class="text-center">{{ $item?->perangkat?->kode_aset ?? '' }}</td>
-                        <td class="text-center">{{ $item?->perangkat?->deskripsi ?? '' }}</td>
+                        <td>{{ $item?->deskripsi ?? '' }}</td>
                         <td>{{ $item?->pekerjaan ?? '' }}</td>
                         <td>{{ $item?->permasalahan ?? '' }}</td>
                         <td>{{ $item?->solusi ?? '' }}</td>

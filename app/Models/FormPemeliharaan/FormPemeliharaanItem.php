@@ -9,6 +9,7 @@ class FormPemeliharaanItem extends Model
     protected $fillable = [
         'form_pemeliharaan_id',
         'master_perangkat_id',
+        'deskripsi',
         'pekerjaan',
         'permasalahan',
         'solusi',
