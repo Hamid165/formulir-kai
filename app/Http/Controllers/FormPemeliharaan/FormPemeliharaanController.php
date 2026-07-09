@@ -193,22 +193,7 @@ class FormPemeliharaanController extends Controller
                          ->with('success', 'Formulir pemeliharaan berhasil dihapus.');
     }
 
-    public function exportPdf(FormPemeliharaan $form_pemeliharaan)
-    {
-        $form_pemeliharaan->load('items.perangkat', 'mengetahui');
 
-        // Auto update status draft → dicetak
-        if ($form_pemeliharaan->isDraft()) {
-            $form_pemeliharaan->update(['status' => 'dicetak']);
-        }
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
-            'form-pemeliharaan.pdf',
-            ['form' => $form_pemeliharaan]
-        )->setPaper('a4', 'landscape');
-
-        return $pdf->stream("Checklist_Pemeliharaan_{$form_pemeliharaan->no_ref}.pdf");
-    }
 
     public function confirm(FormPemeliharaan $form_pemeliharaan)
     {

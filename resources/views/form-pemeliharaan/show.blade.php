@@ -52,10 +52,11 @@
         
         @media print {
             body { margin: 0; padding: 0; background-color: white; }
-            .a4-container { box-shadow: none; width: 100%; }
+            .a4-container { box-shadow: none; width: 100%; min-height: auto; padding: 0; }
             .no-print { display: none !important; }
         }
-        @page { size: A4 landscape; margin: 0mm; }
+        @page { size: A4 landscape; margin: 12mm 15mm; }
+        .page-number:before { content: counter(page) " dari " counter(pages); }
     </style>
 </head>
 <body>
@@ -100,7 +101,7 @@
             </tr>
             <tr>
                 <td>Halaman</td>
-                <td>: 2 dari 2</td>
+                <td>: <span class="page-number"></span></td>
             </tr>
         </table>
 
@@ -108,7 +109,7 @@
         <div style="margin: 15px 0;">
             <table class="info-table">
                 <tr><td class="kolom-label">No. Ref</td><td>: {{ $form_pemeliharaan->no_ref ?: '___________________________' }}</td></tr>
-                <tr><td class="kolom-label">Tanggal</td><td>: {{ $form_pemeliharaan->tanggal ? $form_pemeliharaan->tanggal->translatedFormat('d F Y') : '___________________________' }}</td></tr>
+                <tr><td class="kolom-label">Tanggal</td><td>: {{ $form_pemeliharaan->tanggal ? \Carbon\Carbon::parse($form_pemeliharaan->tanggal)->locale('id')->isoFormat('D MMMM Y') : '___________________________' }}</td></tr>
                 <tr><td class="kolom-label">Business Area</td><td>: {{ $form_pemeliharaan->business_area ?: '___________________________' }}</td></tr>
             </table>
             

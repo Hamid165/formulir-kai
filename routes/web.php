@@ -143,7 +143,6 @@ Route::delete('master-pemohon/{id}', [MasterPemohonController::class, 'destroy']
 // ==============================================================
 // ROUTES FORMULIR CHECKLIST PEMELIHARAAN PERANGKAT JARINGAN
 // ==============================================================
-Route::get('form-pemeliharaan/{form_pemeliharaan}/pdf', [FormPemeliharaanController::class, 'exportPdf'])->name('form-pemeliharaan.pdf');
 Route::patch('form-pemeliharaan/{form_pemeliharaan}/confirm', [FormPemeliharaanController::class, 'confirm'])->name('form-pemeliharaan.confirm');
 Route::resource('form-pemeliharaan', FormPemeliharaanController::class);
 
