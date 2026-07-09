@@ -54,6 +54,7 @@ class FormPemeliharaanController extends Controller
             'mengetahui_id'      => 'nullable|exists:master_signers,id',
             'items'              => 'nullable|array',
             'items.*.master_perangkat_id' => 'nullable|exists:master_perangkats,id',
+            'items.*.deskripsi'           => 'nullable|string|max:500',
             'items.*.pekerjaan'           => 'nullable|string|max:500',
             'items.*.permasalahan'        => 'nullable|string',
             'items.*.solusi'              => 'nullable|string',
@@ -91,6 +92,7 @@ class FormPemeliharaanController extends Controller
                     FormPemeliharaanItem::create([
                         'form_pemeliharaan_id' => $form->id,
                         'master_perangkat_id'  => $itemData['master_perangkat_id'] ?? null,
+                        'deskripsi'            => $itemData['deskripsi'] ?? null,
                         'pekerjaan'            => $itemData['pekerjaan'] ?? null,
                         'permasalahan'         => $itemData['permasalahan'] ?? null,
                         'solusi'               => $itemData['solusi'] ?? null,
@@ -134,6 +136,7 @@ class FormPemeliharaanController extends Controller
             'mengetahui_id'      => 'nullable|exists:master_signers,id',
             'items'              => 'nullable|array',
             'items.*.master_perangkat_id' => 'nullable|exists:master_perangkats,id',
+            'items.*.deskripsi'           => 'nullable|string|max:500',
             'items.*.pekerjaan'           => 'nullable|string|max:500',
             'items.*.permasalahan'        => 'nullable|string',
             'items.*.solusi'              => 'nullable|string',
@@ -172,6 +175,7 @@ class FormPemeliharaanController extends Controller
                     FormPemeliharaanItem::create([
                         'form_pemeliharaan_id' => $form_pemeliharaan->id,
                         'master_perangkat_id'  => $itemData['master_perangkat_id'] ?? null,
+                        'deskripsi'            => $itemData['deskripsi'] ?? null,
                         'pekerjaan'            => $itemData['pekerjaan'] ?? null,
                         'permasalahan'         => $itemData['permasalahan'] ?? null,
                         'solusi'               => $itemData['solusi'] ?? null,
@@ -193,22 +197,7 @@ class FormPemeliharaanController extends Controller
                          ->with('success', 'Formulir pemeliharaan berhasil dihapus.');
     }
 
-    public function exportPdf(FormPemeliharaan $form_pemeliharaan)
-    {
-        $form_pemeliharaan->load('items.perangkat', 'mengetahui');
 
-        // Auto update status draft → dicetak
-        if ($form_pemeliharaan->isDraft()) {
-            $form_pemeliharaan->update(['status' => 'dicetak']);
-        }
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
-            'form-pemeliharaan.pdf',
-            ['form' => $form_pemeliharaan]
-        )->setPaper('a4', 'landscape');
-
-        return $pdf->stream("Checklist_Pemeliharaan_{$form_pemeliharaan->no_ref}.pdf");
-    }
 
     public function confirm(FormPemeliharaan $form_pemeliharaan)
     {

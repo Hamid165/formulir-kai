@@ -141,9 +141,7 @@
                                         <a href="{{ route('form-pemeliharaan.edit', $form) }}" class="text-yellow-600 hover:text-yellow-800 transition-colors" title="Edit">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
-                                        <a href="{{ route('form-pemeliharaan.pdf', $form) }}" target="_blank" class="text-green-600 hover:text-green-800 transition-colors" title="Export PDF">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                                        </a>
+
                                         @if ($form->isDicetak())
                                         <form method="POST" action="{{ route('form-pemeliharaan.confirm', $form) }}" class="inline">
                                             @csrf @method('PATCH')
