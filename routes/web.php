@@ -9,13 +9,18 @@ use App\Http\Controllers\FormCctv\MasterSignerController;
 use App\Http\Controllers\FormPencabutanHakAkses\MasterPemohonController;
 use App\Http\Controllers\FormPemeliharaan\FormPemeliharaanController;
 use App\Http\Controllers\FormPemeliharaan\MasterPerangkatController;
+use App\Http\Controllers\FormBaStockOpname\BaStockOpnameController;
+use App\Http\Controllers\FormBaStockOpname\MasterBAStockController;
+
 // ==============================================================
 // ROUTES DASHBOARD (Data Dummy & Ringkasan)
 // ==============================================================
 Route::get('/', function () {
-    $totalKategori = 1; // Dummy untuk saat ini
-    $totalJenisFormulir = 3; // CCTV, Pencabutan Hak Akses, Pemeliharaan Perangkat
-    
+    // Diperbarui menjadi 4 kategori formulir
+    $totalKategori = 1;
+    $totalJenisFormulir = 4; // CCTV, Hak Akses, Pemeliharaan, BA Stock Opname
+
+    // PERBAIKAN: Menambahkan perhitungan BA Stock Opname
     $totalFormulirBulanIni = \App\Models\FormCctv\FormCctv::whereMonth('created_at', date('m'))
                                 ->whereYear('created_at', date('Y'))
                                 ->count()
@@ -24,10 +29,14 @@ Route::get('/', function () {
                                 ->count()
                             + \App\Models\FormPemeliharaan\FormPemeliharaan::whereMonth('created_at', date('m'))
                                 ->whereYear('created_at', date('Y'))
+                                ->count()
+                            + \App\Models\FormBaStockOpname\BaStockOpname::whereMonth('created_at', date('m'))
+                                ->whereYear('created_at', date('Y'))
                                 ->count();
-                                
-    $totalPengguna = 2; // Dummy: Pitra, Hamid (sebelum ada auth)
 
+    $totalPengguna = 2; // Dummy: Pitra, Hamid
+
+    // PERBAIKAN: Memasukkan data BA Stock Opname ke aktivitas terbaru
     $recentForms = collect()
         ->concat(\App\Models\FormCctv\FormCctv::latest()->take(5)->get()->map(function($item) {
             $item->type = 'CCTV';
@@ -47,11 +56,18 @@ Route::get('/', function () {
             $item->title = "Pemeliharaan Perangkat - {$item->no_ref}";
             return $item;
         }))
+        ->concat(\App\Models\FormBaStockOpname\BaStockOpname::latest()->take(5)->get()->map(function($item) {
+            $item->type = 'Berita Acara Stock Opname';
+            $item->route = route('form-ba-stock-opname.show', $item->id);
+            $item->title = "BA Stock Opname - {$item->no_ref}";
+            return $item;
+        }))
         ->sortByDesc('created_at')
         ->take(5);
 
     return view('dashboard', compact('totalKategori', 'totalJenisFormulir', 'totalFormulirBulanIni', 'totalPengguna', 'recentForms'));
 })->name('dashboard');
+
 
 use App\Http\Controllers\FormTemplateController;
 
@@ -62,10 +78,9 @@ Route::put('/formulir/template/{id}', [FormTemplateController::class, 'update'])
 
 Route::get('/formulir', function (\Illuminate\Http\Request $request) {
     $kategori = $request->query('kategori', 'All');
-    
     $templates = \App\Models\FormTemplate::all();
-    
     $formulirs = collect();
+
     foreach ($templates as $template) {
         $total = 0;
         if ($template->nama === 'Pemeliharaan CCTV') {
@@ -75,7 +90,11 @@ Route::get('/formulir', function (\Illuminate\Http\Request $request) {
         } elseif ($template->nama === 'Checklist Pemeliharaan Perangkat Jaringan') {
             $total = \App\Models\FormPemeliharaan\FormPemeliharaan::count();
         }
-        
+        // PERBAIKAN: Menambahkan perhitungan khusus untuk Berita Acara Stock Opname
+        elseif ($template->nama === 'Berita Acara Stock Opname' || str_contains($template->nama, 'Stock Opname')) {
+            $total = \App\Models\FormBaStockOpname\BaStockOpname::count();
+        }
+
         $formulirs->push([
             'id' => $template->id,
             'nama' => $template->nama,
@@ -95,12 +114,12 @@ Route::get('/formulir', function (\Illuminate\Http\Request $request) {
     $perPage = 10;
     $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
     $currentItems = $formulirs->slice(($currentPage - 1) * $perPage, $perPage)->all();
-    
+
     $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
-        $currentItems, 
-        $formulirs->count(), 
-        $perPage, 
-        $currentPage, 
+        $currentItems,
+        $formulirs->count(),
+        $perPage,
+        $currentPage,
         ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
     );
     $paginated->appends(['kategori' => $kategori]);
@@ -111,6 +130,7 @@ Route::get('/formulir', function (\Illuminate\Http\Request $request) {
     ]);
 })->name('formulir.index');
 
+
 // ==============================================================
 // ROUTES FORMULIR PEMELIHARAAN CCTV
 // ==============================================================
@@ -119,12 +139,9 @@ Route::post('form-cctv/parse-excel', [FormCctvController::class, 'parseExcel'])-
 Route::get('form-cctv/template-items', [FormCctvController::class, 'downloadTemplateItems'])->name('form-cctv.template-items');
 Route::resource('form-cctv', FormCctvController::class);
 
-// Master Data CCTV (List Kamera & Lokasi)
 Route::post('master-cctv/import', [MasterCctvController::class, 'import'])->name('master-cctv.import');
 Route::get('master-cctv/template', [MasterCctvController::class, 'downloadTemplate'])->name('master-cctv.template');
 Route::resource('master-cctv', MasterCctvController::class)->only(['store', 'update', 'destroy']);
-
-// Master Data Penandatangan (Signer) CCTV
 Route::resource('master-signer', MasterSignerController::class)->only(['store', 'update', 'destroy']);
 
 
@@ -132,22 +149,30 @@ Route::resource('master-signer', MasterSignerController::class)->only(['store', 
 // ROUTES FORMULIR PENCABUTAN HAK AKSES
 // ==============================================================
 Route::resource('form-pencabutan-hak-akses', FormPencabutanHakAksesController::class);
-
-// Master Data Nama & NIP Pemohon (Untuk Formulir Hak Akses)
 Route::post('master-pemohon/import', [MasterPemohonController::class, 'import'])->name('master-pemohon.import');
 Route::get('master-pemohon/template', [MasterPemohonController::class, 'downloadTemplate'])->name('master-pemohon.template');
 Route::post('master-pemohon', [MasterPemohonController::class, 'store'])->name('master-pemohon.store');
 Route::put('master-pemohon/{id}', [MasterPemohonController::class, 'update'])->name('master-pemohon.update');
 Route::delete('master-pemohon/{id}', [MasterPemohonController::class, 'destroy'])->name('master-pemohon.destroy');
 
+
 // ==============================================================
 // ROUTES FORMULIR CHECKLIST PEMELIHARAAN PERANGKAT JARINGAN
 // ==============================================================
 Route::patch('form-pemeliharaan/{form_pemeliharaan}/confirm', [FormPemeliharaanController::class, 'confirm'])->name('form-pemeliharaan.confirm');
 Route::resource('form-pemeliharaan', FormPemeliharaanController::class);
-
-// Master Data Perangkat Jaringan
 Route::post('master-perangkat/import', [MasterPerangkatController::class, 'import'])->name('master-perangkat.import');
 Route::get('master-perangkat/template', [MasterPerangkatController::class, 'downloadTemplate'])->name('master-perangkat.template');
 Route::get('master-perangkat/{master_perangkat}/info', [MasterPerangkatController::class, 'getInfo'])->name('master-perangkat.info');
 Route::resource('master-perangkat', MasterPerangkatController::class)->only(['store', 'update', 'destroy']);
+
+
+// ==============================================================
+// ROUTES FORMULIR BERITA ACARA STOCK OPNAME
+// ==============================================================
+
+// PERBAIKAN: Memindahkan Route Template ke ATAS Route Resource agar tidak terjadi 404
+Route::get('form-ba-stock-opname/template', [BaStockOpnameController::class, 'downloadTemplate'])->name('form-ba-stock-opname.template');
+
+Route::resource('form-ba-stock-opname', BaStockOpnameController::class);
+Route::resource('master-bastock', MasterBAStockController::class)->only(['store', 'update', 'destroy']);
