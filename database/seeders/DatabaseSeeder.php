@@ -57,6 +57,17 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        if (!\App\Models\FormTemplate::where('nama', 'Berita Acara Stock Opname')->exists()) {
+            \App\Models\FormTemplate::create([
+                'nama' => 'Berita Acara Stock Opname',
+                'kategori' => 'Terbatas',
+                'route_name' => 'form-ba-stock-opname.index',
+                'no_dokumen' => 'FR.SM/TI/011.010/04-2026',
+                'tanggal_dokumen' => '13 April 2026',
+                'versi_dokumen' => '001-2026',
+            ]);
+        }
+
         $this->call([
             MasterPerangkatSeeder::class,
         ]);
