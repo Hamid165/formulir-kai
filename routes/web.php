@@ -11,14 +11,15 @@ use App\Http\Controllers\FormPemeliharaan\FormPemeliharaanController;
 use App\Http\Controllers\FormPemeliharaan\MasterPerangkatController;
 use App\Http\Controllers\FormBaStockOpname\BaStockOpnameController;
 use App\Http\Controllers\FormBaStockOpname\MasterBAStockController;
+use App\Http\Controllers\FormItBusinessRequest\FormItBusinessRequestController;
 
 // ==============================================================
 // ROUTES DASHBOARD (Data Dummy & Ringkasan)
 // ==============================================================
 Route::get('/', function () {
-    // Diperbarui menjadi 4 kategori formulir
+    // Diperbarui menjadi 5 kategori formulir
     $totalKategori = 1;
-    $totalJenisFormulir = 4; // CCTV, Hak Akses, Pemeliharaan, BA Stock Opname
+    $totalJenisFormulir = 5; // CCTV, Hak Akses, Pemeliharaan, BA Stock Opname, IT Business Request
 
     // PERBAIKAN: Menambahkan perhitungan BA Stock Opname
     $totalFormulirBulanIni = \App\Models\FormCctv\FormCctv::whereMonth('created_at', date('m'))
@@ -31,6 +32,9 @@ Route::get('/', function () {
                                 ->whereYear('created_at', date('Y'))
                                 ->count()
                             + \App\Models\FormBaStockOpname\BaStockOpname::whereMonth('created_at', date('m'))
+                                ->whereYear('created_at', date('Y'))
+                                ->count()
+                            + \App\Models\FormItBusinessRequest\FormItBusinessRequest::whereMonth('created_at', date('m'))
                                 ->whereYear('created_at', date('Y'))
                                 ->count();
 
@@ -60,6 +64,12 @@ Route::get('/', function () {
             $item->type = 'Berita Acara Stock Opname';
             $item->route = route('form-ba-stock-opname.show', $item->id);
             $item->title = "BA Stock Opname - {$item->no_ref}";
+            return $item;
+        }))
+        ->concat(\App\Models\FormItBusinessRequest\FormItBusinessRequest::latest()->take(5)->get()->map(function($item) {
+            $item->type = 'IT Business Request';
+            $item->route = route('form-it-business-request.show', $item->id);
+            $item->title = "IT Business Request - {$item->no_ref}";
             return $item;
         }))
         ->sortByDesc('created_at')
@@ -93,6 +103,9 @@ Route::get('/formulir', function (\Illuminate\Http\Request $request) {
         // PERBAIKAN: Menambahkan perhitungan khusus untuk Berita Acara Stock Opname
         elseif ($template->nama === 'Berita Acara Stock Opname' || str_contains($template->nama, 'Stock Opname')) {
             $total = \App\Models\FormBaStockOpname\BaStockOpname::count();
+        }
+        elseif ($template->nama === 'Formulir IT Business Request' || str_contains($template->nama, 'Business Request')) {
+            $total = \App\Models\FormItBusinessRequest\FormItBusinessRequest::count();
         }
 
         $formulirs->push([
@@ -176,3 +189,9 @@ Route::get('form-ba-stock-opname/template', [BaStockOpnameController::class, 'do
 
 Route::resource('form-ba-stock-opname', BaStockOpnameController::class);
 Route::resource('master-bastock', MasterBAStockController::class)->only(['store', 'update', 'destroy']);
+
+
+// ==============================================================
+// ROUTES FORMULIR IT BUSINESS REQUEST
+// ==============================================================
+Route::resource('form-it-business-request', FormItBusinessRequestController::class);

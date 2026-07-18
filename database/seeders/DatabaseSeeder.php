@@ -57,8 +57,20 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        if (!\App\Models\FormTemplate::where('nama', 'Formulir IT Business Request')->exists()) {
+            \App\Models\FormTemplate::create([
+                'nama' => 'Formulir IT Business Request',
+                'kategori' => 'Lainnya',
+                'route_name' => 'form-it-business-request.index',
+                'no_dokumen' => 'FR.SM/TI/026.001/10-2020',
+                'tanggal_dokumen' => '15 Oktober 2020',
+                'versi_dokumen' => '001-2020',
+            ]);
+        }
+
         $this->call([
             MasterPerangkatSeeder::class,
+            FormItBusinessRequestSeeder::class,
         ]);
     }
 }
